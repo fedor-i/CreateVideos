@@ -30,4 +30,11 @@ echo "== 5. final cut (trim 2.4s silent head off section 2) =="
 python -m cv.assemble "$B/final_obn.mp4" \
   "$B/open.mp4" "$B/sec1_mcp.mp4" "$B/d2.mp4" "2.4~$B/sec2_insights.mp4"
 
-echo "DONE → $B/final_obn.mp4"
+# The shipped OpenBioNews video was voice-only. To add a ducked music bed instead:
+if [ "$1" = "--music" ]; then
+  echo "== 6. (optional) music bed =="
+  python -m cv.music bed "$B/final_obn.mp4" "$B/final_obn_music.mp4"
+  echo "DONE → $B/final_obn_music.mp4"
+else
+  echo "DONE → $B/final_obn.mp4   (add --music for a ducked background track)"
+fi

@@ -60,8 +60,10 @@ python -m cv.live examples/openbionews/insights_recipe.py build/audio/ins_manife
 
 # 4. stitch cards + sections into the final 1080p/60fps video
 python -m cv.assemble build/final.mp4 \
-    --card "Two new features"=build/open.mp4 \
-    build/sec1_mcp.mp4 build/sec2.mp4
+    build/open.mp4 build/sec1_mcp.mp4 build/sec2.mp4
+
+# 5. (optional) bed ducked background music under the voiceover
+python -m cv.music bed build/final.mp4 build/final_music.mp4
 ```
 
 A complete worked build is in [`examples/openbionews/`](examples/openbionews/) — run
@@ -109,6 +111,23 @@ a clip with in/out fades. Used for the opening title and section dividers.
 Normalizes every piece to **1920×1080, 60fps, 48kHz stereo** and concatenates them.
 Pieces can be trimmed on the way in (e.g. drop a silent head). Mismatched fps/sample-rate
 between pieces is the usual cause of A/V drift at joins — this step exists to kill that.
+
+### `cv/music.py` — optional music bed
+A *post* step on a finished (voice-only) video. Synthesizes an upbeat-corporate loop in
+ffmpeg — plucky sine arpeggio (I–V–vi–IV) + warm bass + soft kick/hats at ~112 BPM, no
+samples, no license — loops it to length, and ducks it under the existing voiceover with
+a sidechain compressor so the voice always sits on top. The video stream is **copied**
+(`-c:v copy`), so there's no re-encode and no quality loss. Omit this step entirely for a
+clean voice-only cut (what the OpenBioNews video shipped as).
+
+```bash
+python -m cv.music loop build            # reusable build/music/loop.wav (optional)
+python -m cv.music bed in.mp4 out.mp4     # duck music under the VO (auto-makes a loop)
+python -m cv.music bed in.mp4 out.mp4 --loop build/music/loop.wav --volume 2.4
+```
+
+> **ffmpeg gotcha:** fusing `sidechaincompress` with the video encode in one pass hangs
+> at 100% CPU. `cv/music.py` mixes audio first, then remuxes with `-c:v copy`.
 
 ## Hard-won lessons
 
@@ -158,7 +177,8 @@ CreateVideos/
 │   ├── live.py              # live site → eased recording
 │   ├── mux.py               # overlay narration + interpolate to 60fps
 │   ├── cards.py             # PNG + line → card clip
-│   └── assemble.py          # normalize + concat → final
+│   ├── assemble.py          # normalize + concat → final
+│   └── music.py             # optional: synth loop + duck under the VO
 └── examples/
     └── openbionews/         # the real two-section build, reproducible
 ```
