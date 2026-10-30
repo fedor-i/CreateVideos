@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<style>
+  :root{
+    --bg:#0a0f1c; --panel:#111a30; --line:#24314f; --faint:#5a6b8c;
+    --ink:#e8eef9; --dim:#8295b6;
+    --green:#36d399; --amber:#f5b945; --red:#f06a6a; --blue:#5aa2ff; --violet:#a78bfa;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1920px;height:1080px;background:
+     radial-gradient(1200px 700px at 78% -8%,#13203d 0%,transparent 60%),
+     radial-gradient(900px 600px at 6% 108%,#101a33 0%,transparent 55%),var(--bg);
+     color:var(--ink);font-family:var(--sans);overflow:hidden}
+  .stage{position:absolute;inset:0;padding:66px 90px;display:flex;flex-direction:column}
+  .brand{display:flex;align-items:center;gap:15px;font-weight:700;font-size:25px;letter-spacing:.3px}
+  .dot{width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));box-shadow:0 0 22px #36d39988}
+  .brand .tag{font-weight:500;color:var(--dim);font-size:18px;margin-left:4px}
+  .sect{margin-left:auto;font-family:var(--mono);font-size:16px;color:#07120d;background:linear-gradient(135deg,var(--green),var(--blue));padding:7px 15px;border-radius:999px;font-weight:700}
+  h1{font-size:52px;line-height:1.08;font-weight:760;margin-top:24px;letter-spacing:-.5px}
+  h1 .accent{background:linear-gradient(120deg,var(--green),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{font-size:23px;color:var(--dim);margin-top:13px;max-width:1240px;line-height:1.4}
+  .body{flex:1;margin-top:28px;position:relative}
+  .beat{position:absolute;inset:0;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s;pointer-events:none}
+  .beat.on{opacity:1;transform:none}
+  /* flow */
+  .flow{display:flex;align-items:center;justify-content:center;gap:34px;height:100%}
+  .node{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px 34px;text-align:center;min-width:260px}
+  .node.hub{border-color:#276b4e;background:#0e1c17}
+  .node .big{font-size:30px;font-weight:720}
+  .node .d{color:var(--dim);font-size:19px;margin-top:9px;line-height:1.35}
+  .srcs{display:flex;flex-direction:column;gap:9px;font-family:var(--mono);font-size:18px;color:var(--blue);text-align:left}
+  .farrow{font-size:46px;color:var(--faint)}
+  /* source grid */
+  .srcgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;height:100%;align-content:center}
+  .scard{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:22px 24px}
+  .scard .t{font-size:24px;font-weight:700}
+  .scard .d{color:var(--dim);font-size:17px;margin-top:7px;line-height:1.3}
+  .countbar{display:flex;gap:40px;margin-bottom:6px;align-items:baseline}
+  .countbar .c{font-size:30px;font-weight:800}
+  .countbar .c b{font-family:var(--mono);color:var(--green);font-size:40px}
+  /* record card */
+  .rec{background:#070c18;border:1px solid var(--line);border-radius:16px;overflow:hidden;max-width:1200px;margin:20px auto 0}
+  .rechead{display:flex;align-items:center;gap:14px;padding:18px 26px;border-bottom:1px solid var(--line);font-family:var(--mono)}
+  .rechead .nct{color:var(--blue);font-size:19px} .rechead .src{color:var(--faint);font-size:17px}
+  .rectitle{padding:16px 26px 6px;font-size:24px;font-weight:650}
+  .recfacts{padding:8px 26px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px 40px;font-family:var(--mono);font-size:21px}
+  .recfacts .k{color:var(--faint)} .recfacts .v{color:var(--green);font-weight:700}
+  .reclink{padding:0 26px 22px;font-family:var(--mono);font-size:18px;color:var(--blue)}
+  .recnote{text-align:center;color:var(--dim);font-size:22px;margin-top:20px}
+  .recnote b{color:var(--ink)}
+  /* honesty */
+  .honest{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:26px}
+  .noresult{font-family:var(--mono);font-size:30px;background:#0c1322;border:1px solid var(--line);border-radius:14px;padding:26px 36px;color:var(--amber)}
+  .honest .d{font-size:28px;color:var(--dim);max-width:1100px;text-align:center;line-height:1.5}
+  .honest .d b{color:var(--ink)}
+  /* rank stat */
+  .rankwrap{display:flex;align-items:center;justify-content:center;gap:80px;height:100%}
+  .rstat{text-align:center}
+  .rstat .lab{font-size:22px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+  .rstat .val{font-family:var(--mono);font-size:150px;font-weight:800;line-height:1;margin-top:8px}
+  .rstat .val.good{color:var(--green)} .rstat .val.bad{color:var(--faint)}
+  .rstat .cap{color:var(--dim);font-size:20px;margin-top:10px}
+  .rvs{font-size:40px;color:var(--faint);font-weight:700}
+  .rankfoot{position:absolute;bottom:4px;width:100%;text-align:center;color:var(--dim);font-size:21px}
+  /* close */
+  .close{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+  /* console */
+  .console{background:#070b16;border:1px solid var(--line);border-radius:14px;display:inline-block;margin-top:24px;text-align:left}
+  .cbar{padding:12px 18px;background:#0b1222;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:15px;color:var(--faint)}
+  .ccode{font-family:var(--mono);font-size:26px;padding:20px 28px} .ccode .k{color:var(--violet)} .ccode .s{color:var(--green)}
+</style></head>
+<body>
+<div class="stage">
+  <div class="brand"><span class="dot"></span>OpenBioNews<span class="tag">· free &amp; open source</span>
+    <span class="sect">1 · MCP server</span></div>
+  <h1 id="h1">&nbsp;</h1>
+  <div class="sub" id="sub">&nbsp;</div>
+
+  <div class="body">
+    <!-- m1 what -->
+    <div class="beat" id="b1">
+      <div class="flow">
+        <div class="node"><div class="big">Your AI assistant</div><div class="d">Claude, or any<br>MCP client</div></div>
+        <div class="farrow">→</div>
+        <div class="node hub"><div class="big">OpenBioNews</div><div class="d">MCP server<br>free · no API key</div></div>
+        <div class="farrow">→</div>
+        <div class="node"><div class="srcs">
+          <div>ClinicalTrials.gov</div><div>openFDA</div><div>Federal Register</div><div>PubMed</div><div>SEC EDGAR</div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- m2 toolset -->
+    <div class="beat" id="b2">
+      <div class="countbar"><div class="c"><b>10</b> tools</div><div class="c"><b>9</b> official sources</div></div>
+      <div class="srcgrid">
+        <div class="scard"><div class="t">Clinical trials</div><div class="d">ClinicalTrials.gov — ranked</div></div>
+        <div class="scard"><div class="t">FDA approvals</div><div class="d">new drug &amp; device clearances</div></div>
+        <div class="scard"><div class="t">FDA recalls</div><div class="d">enforcement reports</div></div>
+        <div class="scard"><div class="t">FDA shortages</div><div class="d">current &amp; resolved</div></div>
+        <div class="scard"><div class="t">FDA adverse events</div><div class="d">FAERS safety signals</div></div>
+        <div class="scard"><div class="t">FDA labels</div><div class="d">indications, boxed warnings</div></div>
+        <div class="scard"><div class="t">Federal Register</div><div class="d">rules, notices, guidance</div></div>
+        <div class="scard"><div class="t">PubMed</div><div class="d">the biomedical literature</div></div>
+        <div class="scard"><div class="t">SEC EDGAR</div><div class="d">8-K / 10-K filings · + a cross-source digest</div></div>
+      </div>
+    </div>
+
+    <!-- m3 cited + quotable -->
+    <div class="beat" id="b3">
+      <div class="rec">
+        <div class="rechead"><span class="src">ClinicalTrials.gov</span><span class="nct">NCT03574597</span><span style="color:var(--green);margin-left:auto;font-size:16px">✓ registry record</span></div>
+        <div class="rectitle">SELECT — Semaglutide effects on cardiovascular outcomes in overweight / obesity</div>
+        <div class="recfacts">
+          <div><span class="k">enrollment</span> &nbsp;<span class="v">17,604</span></div>
+          <div><span class="k">phase</span> &nbsp;<span class="v">Phase 3</span></div>
+          <div><span class="k">status</span> &nbsp;<span class="v">Completed</span></div>
+          <div><span class="k">primary endpoint</span> &nbsp;<span class="v">time to first MACE</span></div>
+        </div>
+        <div class="reclink">🔗 clinicaltrials.gov/study/NCT03574597</div>
+      </div>
+      <div class="recnote">Every record links to its <b>official source</b> — and the numbers come <b>straight from the record</b>, so the model quotes them, not guesses.</div>
+    </div>
+
+    <!-- m4 honesty -->
+    <div class="beat" id="b4">
+      <div class="honest">
+        <div class="noresult">“no current results as of today”</div>
+        <div class="d">When nothing matches, it <b>says so, explicitly</b> — not just an empty list the model can fill with a guess.</div>
+      </div>
+    </div>
+
+    <!-- m5 rank by importance -->
+    <div class="beat" id="b5">
+      <div class="rankwrap">
+        <div class="rstat"><div class="lab">Rank by importance</div><div class="val good">79%</div><div class="cap">landmark trials in the top 7</div></div>
+        <div class="rvs">vs</div>
+        <div class="rstat"><div class="lab">Newest-first</div><div class="val bad">5%</div><div class="cap">same trials, sorted by date</div></div>
+      </div>
+      <div class="rankfoot">measured across 43 landmark trials for 20 drugs — it surfaces what matters, not just what's new</div>
+    </div>
+
+    <!-- m6 close -->
+    <div class="beat" id="b6">
+      <div class="close">
+        <div class="dot" style="width:34px;height:34px;margin-bottom:24px"></div>
+        <div style="font-size:54px;font-weight:780;letter-spacing:-.5px">Official records, <span class="accent">cited</span> — for your agent.</div>
+        <div class="console"><div class="cbar">install</div><div class="ccode"><span class="k">pipx install</span> <span class="s">"openbionews[mcp]"</span></div></div>
+        <div style="font-size:21px;color:var(--dim);margin-top:22px;font-family:var(--mono)">free · MIT · github.com/fedor-i/OpenBioNews</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const H={
+ b1:{tag:"the first feature", h:'Official records, straight to your <span class="accent">AI assistant</span>.', sub:"OpenBioNews is a free MCP server — so an assistant can query the primary biopharma record directly."},
+ b2:{tag:"the surface", h:'Ten tools. <span class="accent">Nine official sources</span>.', sub:"Trials, the FDA, the Federal Register, PubMed, and SEC EDGAR — one interface."},
+ b3:{tag:"cited & quotable", h:'Linked, with the <span class="accent">real numbers</span>.', sub:"Enrollment, endpoints, dates — pulled from the record itself."},
+ b4:{tag:"honest by default", h:'And it <span class="accent">won\'t bluff</span>.', sub:"No match? It says so, instead of returning an empty list."},
+ b5:{tag:"rank by importance", h:'The trials that <span class="accent">matter</span>, not just the newest.', sub:"Importance ranking vs sorting by date — measured."},
+ b6:{tag:"free & open source", h:'', sub:""},
+};
+let cur=null;
+function show(id){ if(cur)document.getElementById(cur).classList.remove('on');
+  const b=document.getElementById(id); b.classList.add('on'); cur=id; const h=H[id];
+  if(h){ document.querySelector('.sect').textContent="1 · MCP server";
+    document.getElementById('h1').innerHTML=h.h||'&nbsp;'; document.getElementById('sub').innerHTML=h.sub||'&nbsp;';
+    document.getElementById('h1').style.opacity=h.h?1:0; document.getElementById('sub').style.opacity=h.sub?1:0;} }
+window.show=show; show('b1');
+</script>
+</body></html>

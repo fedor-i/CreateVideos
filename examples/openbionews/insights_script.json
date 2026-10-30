@@ -1,0 +1,9 @@
+[
+ {"id":"01","phase":"intro","text":"Now the second feature, on the website. Insights. Pick a company, drug, or condition, and get one view across every agency."},
+ {"id":"02","phase":"controls","text":"Two modes. Update, for what's new since your last visit. Research, for what matters, including landmark trials from years back."},
+ {"id":"03","phase":"build","text":"One click builds it, live from ClinicalTrials.gov, the F.D.A., and S.E.C. EDGAR."},
+ {"id":"04","phase":"stats","text":"In seconds: key stats, the high-signal events, and the terms rising right now."},
+ {"id":"05","phase":"methods","text":"There's no LLM in the core, so there's nothing to hallucinate. Every figure is counted from the cited records underneath, and a daily check runs every tool against the live government APIs."},
+ {"id":"06","phase":"drawers","text":"Emerging themes, the busiest sponsors, the phase mix, a ranked view of what actually matters."},
+ {"id":"07","phase":"close","text":"It runs in your browser. No login, no tracking. That's OpenBioNews."}
+]

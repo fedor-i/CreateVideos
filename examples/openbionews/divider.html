@@ -1,0 +1,32 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+ :root{--bg:#0a0f1c;--ink:#e8eef9;--dim:#8295b6;--green:#36d399;--blue:#5aa2ff;--mono:"SF Mono",ui-monospace,Menlo,monospace;--sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+ *{margin:0;box-sizing:border-box}
+ html,body{width:1920px;height:1080px;background:
+   radial-gradient(1200px 700px at 78% -8%,#13203d 0%,transparent 60%),
+   radial-gradient(900px 600px at 6% 108%,#101a33 0%,transparent 55%),var(--bg);
+   color:var(--ink);font-family:var(--sans);overflow:hidden}
+ .wrap{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+ .dot{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));box-shadow:0 0 26px #36d39988;margin-bottom:30px}
+ .brandrow{font-size:28px;font-weight:700;color:var(--dim);letter-spacing:.3px;margin-bottom:18px}
+ .num{font-family:var(--mono);font-size:30px;color:var(--green);margin-bottom:14px;letter-spacing:2px}
+ .title{font-size:76px;font-weight:800;letter-spacing:-1px}
+ .title .ac{background:linear-gradient(120deg,var(--green),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+ .subt{font-size:28px;color:var(--dim);margin-top:20px;max-width:1200px;line-height:1.4}
+ .card{display:none} .card.on{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:absolute;inset:0}
+</style></head><body>
+ <div class="card" id="open">
+   <div class="dot"></div>
+   <div class="brandrow">OpenBioNews</div>
+   <div class="title">Two new <span class="ac">features</span></div>
+   <div class="subt">Ask your AI assistant about biopharma — and get answers drawn from the official records, cited.</div>
+ </div>
+ <div class="card" id="d2">
+   <div class="num">SECTION 2</div>
+   <div class="title">Insights</div>
+   <div class="subt">An analysis view on the website — one cross-agency digest, no login, no tracking.</div>
+ </div>
+<script>
+function show(id){document.querySelectorAll('.card').forEach(c=>c.classList.remove('on'));document.getElementById(id).classList.add('on');}
+window.show=show; show('open');
+</script></body></html>

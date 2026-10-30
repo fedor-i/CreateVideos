@@ -1,0 +1,8 @@
+[
+ {"id":"01","beat":"b1","text":"Here's the first feature. OpenBioNews is a free MCP server, so an AI assistant like Claude can query the official biopharma records directly."},
+ {"id":"02","beat":"b2","text":"Ten tools across nine sources: ClinicalTrials.gov, the FDA's recalls, approvals, shortages, adverse events and labels, the Federal Register, PubMed, and SEC EDGAR."},
+ {"id":"03","beat":"b3","text":"Every record comes back with a link to its official source. And the key numbers, enrollment, endpoints, and dates, come straight from the record, so the model quotes them instead of guessing."},
+ {"id":"04","beat":"b4","text":"And if nothing matches, it says so, explicitly: no current results as of today. Not just an empty list."},
+ {"id":"05","beat":"b5","text":"Ask it to rank by importance, and it surfaces the trials that matter, not just the newest. Across 43 landmark trials for 20 drugs, it puts 79 percent in the top seven, against 5 percent for newest-first."},
+ {"id":"06","beat":"b6","text":"Free, open source, and one install away."}
+]
