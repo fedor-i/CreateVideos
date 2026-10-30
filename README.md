@@ -11,6 +11,9 @@ This grew out of a real job (the OpenBioNews two-feature video) and carries the 
 that made it stop looking amateurish. See [Hard-won lessons](#hard-won-lessons) — read
 those before you touch the recording code.
 
+<p align="center"><img src="docs/pipeline.svg" width="560"
+  alt="Pipeline: narration script → synth.py → scene.py / live.py+mux.py / cards.py producers → clips → assemble.py → final video, with optional music.py bed"></p>
+
 ---
 
 ## The mental model
